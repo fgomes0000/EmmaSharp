@@ -159,10 +159,14 @@ namespace EmmaSharp
 			request.AddUrlSegment("memberId", memberId);
 
 			if (type != null)
-				request.AddParameter("type", type);
+			{
+                //ParameterType pt = ParameterType.QueryString;
+                //request.AddParameter(Parameter.CreateParameter("type", type, pt));
+                request.AddQueryParameter("type", type.ToEnumString<PersonalizationType>());
+            }
 
             return Execute<MailingPersonalization>(request);
-		}
+        }
 
         /// <summary>
         /// Get the count of groups to which a particular mailing was sent.
@@ -220,12 +224,16 @@ namespace EmmaSharp
 		/// <param name="status">The status can be one of canceled, paused or ready. This method can be used to control the progress of a mailing by pausing, canceling or resuming it. Once a mailing is canceled it can’t be resumed, and will not show in the normal mailing_list output.</param>
         public UpdateMailing UpdateMailingStatus(string mailingId, UpdateMailingStatus status)
 		{
-			var request = new RestRequest(Method.PUT);
-			request.Resource = "/{accountId}/mailings/{mailingId}";
+			var request = new RestRequest()
+			{
+				Method = Method.Put,
+
+				Resource = "/{accountId}/mailings/{mailingId}"
+			};
             request.AddUrlSegment("mailingId", mailingId);
 
             request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+            //request.JsonSerializer = new EmmaJsonSerializer();
             request.AddBody(new { status = status.ToEnumString<UpdateMailingStatus>() });
 
             return Execute<UpdateMailing>(request);
@@ -238,9 +246,12 @@ namespace EmmaSharp
 		/// <param name="mailingId">Mailing identifier.</param>
 		public bool ArchiveMailing(string mailingId)
 		{
-			var request = new RestRequest(Method.DELETE);
-			request.Resource = "/{accountId}/mailings/{mailingId}";
-			request.AddUrlSegment("mailingId", mailingId);
+            var request = new RestRequest
+            {
+                Method = Method.Delete,
+                Resource = "/{accountId}/mailings/{mailingId}"
+            };
+            request.AddUrlSegment("mailingId", mailingId);
 
 			return Execute<bool>(request);
 		}
@@ -252,9 +263,12 @@ namespace EmmaSharp
 		/// <param name="mailingId">Mailing identifier.</param>
 		public bool CancelMailing(string mailingId)
 		{
-			var request = new RestRequest(Method.DELETE);
-			request.Resource = "/{accountId}/mailings/cancel/{mailingId}";
-			request.AddUrlSegment("mailingId", mailingId);
+            var request = new RestRequest
+            {
+                Method = Method.Delete,
+                Resource = "/{accountId}/mailings/cancel/{mailingId}"
+            };
+            request.AddUrlSegment("mailingId", mailingId);
 
 			return Execute<bool>(request);
 		}
@@ -269,13 +283,16 @@ namespace EmmaSharp
 		/// <remarks>Http404 if no message is found.</remarks>
         public MailingIdentifier ForwardMailing(string mailingId, string memberId, ForwardMailing mailing)
 		{
-			var request = new RestRequest(Method.POST);
-			request.Resource = "/{accountId}/forwards/{mailingId}/{memberId}";
-			request.AddUrlSegment("mailingId", mailingId);
+            var request = new RestRequest
+            {
+                Method = Method.Post,
+                Resource = "/{accountId}/forwards/{mailingId}/{memberId}"
+            };
+            request.AddUrlSegment("mailingId", mailingId);
             request.AddUrlSegment("memberId", memberId);
 
             request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+            //request.JsonSerializer = new EmmaJsonSerializer();
             request.AddBody(mailing);
 
             return Execute<MailingIdentifier>(request);
@@ -290,12 +307,15 @@ namespace EmmaSharp
 		/// <remarks>Http404 if no message is found.</remarks>
         public MailingIdentifier ResendMailing(string mailingId, ResendMailing mailing)
 		{
-			var request = new RestRequest(Method.POST);
-			request.Resource = "/{accountId}/mailings/{mailingId}";
+            var request = new RestRequest()
+            {
+                Method = Method.Post,
+                Resource = "/{accountId}/mailings/{mailingId}"
+            };
             request.AddUrlSegment("mailingId", mailingId);
 
             request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+            //request.JsonSerializer = new EmmaJsonSerializer();
             request.AddBody(mailing);
 
             return Execute<MailingIdentifier>(request);
@@ -308,9 +328,11 @@ namespace EmmaSharp
 		/// <param name="mailingId">Mailing identifier.</param>
         public List<MailingHeadsUp> GetHeadsUpEmailsForMailing(string mailingId)
 		{
-			var request = new RestRequest();
-			request.Resource = "/{accountId}/mailings/{mailingId}/headsup";
-			request.AddUrlSegment("mailingId", mailingId);
+            var request = new RestRequest
+            {
+                Resource = "/{accountId}/mailings/{mailingId}/headsup"
+            };
+            request.AddUrlSegment("mailingId", mailingId);
 
             return Execute<List<MailingHeadsUp>>(request);
 		}
@@ -323,11 +345,14 @@ namespace EmmaSharp
 		/// <remarks>Http400 if any tags are invalid. The response body will have information about the invalid tags.</remarks>
 		public bool VaildatePersonalizationSyntax(MailingPersonalization personalization)
 		{
-			var request = new RestRequest(Method.POST);
-			request.Resource = "/{accountId}/mailings/validate";
+            var request = new RestRequest()
+            {
+                Method = Method.Post,
+                Resource = "/{accountId}/mailings/validate",
 
-            request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+                RequestFormat = DataFormat.Json,
+                //JsonSerializer = new EmmaJsonSerializer()
+            };
             request.AddBody(personalization);
 
 			return Execute<bool>(request);
@@ -342,9 +367,12 @@ namespace EmmaSharp
 		/// <remarks>Http403 if the winner cannot be manually declared.</remarks>
 		public bool DeclareWinner(string mailingId, string winnerId)
 		{
-			var request = new RestRequest(Method.POST);
-			request.Resource = "/{accountId}/mailings/{mailingId}/winner/{winnerId}";
-			request.AddUrlSegment("mailingId", mailingId);
+            var request = new RestRequest()
+            {
+                Method = Method.Post,
+                Resource = "/{accountId}/mailings/{mailingId}/winner/{winnerId}"
+            };
+            request.AddUrlSegment("mailingId", mailingId);
 			request.AddUrlSegment("winnerId", winnerId);
 
 			return Execute<bool>(request);

@@ -54,11 +54,14 @@ namespace EmmaSharp
         /// <returns>The ID of the newly created webhook.</returns>@Html.Raw(breadcrumb.Item3)
         public int CreateWebhook(CreateWebhook webhook)
         {
-            var request = new RestRequest(Method.POST);
-            request.Resource = "/{accountId}/webhooks";
+            var request = new RestRequest()
+            {
+                Method = Method.Post,
+                Resource = "/{accountId}/webhooks",
 
-            request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+                RequestFormat = DataFormat.Json,
+                //JsonSerializer = new EmmaJsonSerializer()
+            };
             request.AddBody(webhook);
 
             return Execute<int>(request);
@@ -72,12 +75,15 @@ namespace EmmaSharp
         /// <returns>The id of the updated webhook, or False if the update failed.</returns>
         public int UpdateWebhook(string webhookId, UpdateWebhook webhook)
         {
-            var request = new RestRequest(Method.PUT);
-            request.Resource = "/{accountId}/webhooks/{webhookId}";
+            var request = new RestRequest()
+            {
+                Method = Method.Put,
+                Resource = "/{accountId}/webhooks/{webhookId}"
+            };
             request.AddUrlSegment("webhookId", webhookId);
 
             request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+            //request.JsonSerializer = new EmmaJsonSerializer();
             request.AddBody(webhook);
 
             return Execute<int>(request);
@@ -90,8 +96,11 @@ namespace EmmaSharp
         /// <returns>True if the webhook deleted successfully.</returns>
         public bool DeleteWebhookById(string webhookId)
         {
-            var request = new RestRequest(Method.DELETE);
-            request.Resource = "/{accountId}/webhooks/{webhookId}";
+            var request = new RestRequest()
+            {
+                Method = Method.Delete,
+                Resource = "/{accountId}/webhooks/{webhookId}"
+            };
             request.AddUrlSegment("webhookId", webhookId);
 
             return Execute<bool>(request);
@@ -103,8 +112,11 @@ namespace EmmaSharp
         /// <returns>True if the webhook deleted successfully.</returns>
         public bool DeleteAllWebhooks()
         {
-            var request = new RestRequest(Method.DELETE);
-            request.Resource = "/{accountId}/webhooks";
+            var request = new RestRequest()
+            {
+                Method = Method.Delete,
+                Resource = "/{accountId}/webhooks"
+            };
 
             return Execute<bool>(request);
         }

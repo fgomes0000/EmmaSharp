@@ -64,12 +64,15 @@ namespace EmmaSharp
         [Obsolete("Trigger endpoints have been deprecated, and will be removed in future releases.")]
         public int UpdateTrigger(string triggerId, string name)
         {
-            var request = new RestRequest(Method.PUT);
-            request.Resource = "/{accountId}/triggers/{triggerId}";
+            var request = new RestRequest()
+            {
+                Method = Method.Put,
+                Resource = "/{accountId}/triggers/{triggerId}"
+            };
             request.AddUrlSegment("triggerId", triggerId);
 
             request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+            //request.JsonSerializer = new EmmaJsonSerializer();
             request.AddBody(new { name = name });
 
             return Execute<int>(request);
@@ -83,8 +86,11 @@ namespace EmmaSharp
         [Obsolete("Trigger endpoints have been deprecated, and will be removed in future releases.")]
         public bool DeleteTrigger(string triggerId)
         {
-            var request = new RestRequest(Method.DELETE);
-            request.Resource = "/{accountId}/triggers/{triggerId}";
+            var request = new RestRequest()
+            {
+                Method = Method.Delete,
+                Resource = "/{accountId}/triggers/{triggerId}"
+            };
             request.AddUrlSegment("triggerId", triggerId);
 
             return Execute<bool>(request);
@@ -98,8 +104,10 @@ namespace EmmaSharp
         [Obsolete("Trigger endpoints have been deprecated, and will be removed in future releases.")]
         public int GetMailingsByTriggerCount(string triggerId)
         {
-            var request = new RestRequest();
-            request.Resource = "/{accountId}/triggers/{triggerId}/mailings";
+            var request = new RestRequest
+            {
+                Resource = "/{accountId}/triggers/{triggerId}/mailings"
+            };
             request.AddUrlSegment("triggerId", triggerId);
             request.AddParameter("count", "true");
 

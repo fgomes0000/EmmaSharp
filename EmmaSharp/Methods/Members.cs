@@ -116,8 +116,11 @@ namespace EmmaSharp
         /// <remarks>Http404 if no member is found.</remarks>
         public bool UpdateMemberToOptoutByEmail(string memberEmail)
         {
-            var request = new RestRequest(Method.PUT);
-            request.Resource = "/{accountId}/members/email/optout/{memberEmail}";
+            var request = new RestRequest()
+            {
+                Method = Method.Put,
+                Resource = "/{accountId}/members/email/optout/{memberEmail}"
+            };
             request.AddUrlSegment("memberEmail", memberEmail);
 
             return Execute<bool>(request);
@@ -131,11 +134,14 @@ namespace EmmaSharp
         /// <remarks></remarks>
         public MembersAdd AddNewMembers(AddMembers members)
         {
-            var request = new RestRequest(Method.POST);
-            request.Resource = "/{accountId}/members";
+            var request = new RestRequest()
+            {
+                Method = Method.Post,
+                Resource = "/{accountId}/members",
 
-            request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+                RequestFormat = DataFormat.Json,
+                //JsonSerializer = new EmmaJsonSerializer()
+            };
             request.AddBody(members);
 
             return Execute<MembersAdd>(request);
@@ -149,11 +155,14 @@ namespace EmmaSharp
         /// <remarks></remarks>
         public MemberAdd AddOrUpdateSingleMember(AddMember member)
         {
-            var request = new RestRequest(Method.POST);
-            request.Resource = "/{accountId}/members/add";
+            var request = new RestRequest()
+            {
+                Method = Method.Post,
+                Resource = "/{accountId}/members/add",
 
-            request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+                RequestFormat = DataFormat.Json,
+                //JsonSerializer = new EmmaJsonSerializer()
+            };
             request.AddBody(member);
 
             return Execute<MemberAdd>(request);
@@ -167,11 +176,14 @@ namespace EmmaSharp
         /// <remarks></remarks>
         public MemberSignup MemberSignup(SignupMember member)
         {
-            var request = new RestRequest(Method.POST);
-            request.Resource = "/{accountId}/members/signup";
+            var request = new RestRequest()
+            {
+                Method = Method.Post,
+                Resource = "/{accountId}/members/signup",
 
-            request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+                RequestFormat = DataFormat.Json,
+                //JsonSerializer = new EmmaJsonSerializer()
+            };
             request.AddBody(member);
 
             return Execute<MemberSignup>(request);
@@ -185,11 +197,14 @@ namespace EmmaSharp
         /// <remarks></remarks>
         public bool DeleteMembers(DeleteMembers members)
         {
-            var request = new RestRequest(Method.PUT);
-            request.Resource = "/{accountId}/members/delete";
+            var request = new RestRequest()
+            {
+                Method = Method.Put,
+                Resource = "/{accountId}/members/delete",
 
-            request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+                RequestFormat = DataFormat.Json,
+                //JsonSerializer = new EmmaJsonSerializer()
+            };
             request.AddBody(members);
 
             return Execute<bool>(request);
@@ -203,11 +218,14 @@ namespace EmmaSharp
         /// <remarks></remarks>
         public bool ChangeMemberStatus(ChangeStatus status)
         {
-            var request = new RestRequest(Method.PUT);
-            request.Resource = "/{accountId}/members/status";
+            var request = new RestRequest()
+            {
+                Method = Method.Put,
+                Resource = "/{accountId}/members/status",
 
-            request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+                RequestFormat = DataFormat.Json,
+                //JsonSerializer = new EmmaJsonSerializer()
+            };
             request.AddBody(status);
 
             return Execute<bool>(request);
@@ -222,12 +240,15 @@ namespace EmmaSharp
         /// <remarks>Http404 if no member is found.</remarks>
         public bool UpdateSingleMemberInformation(string memberId, UpdateMember member)
         {
-            var request = new RestRequest(Method.PUT);
-            request.Resource = "/{accountId}/members/{memberId}";
+            var request = new RestRequest()
+            {
+                Method = Method.Put,
+                Resource = "/{accountId}/members/{memberId}"
+            };
             request.AddUrlSegment("memberId", memberId);
 
             request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+            //request.JsonSerializer = new EmmaJsonSerializer();
             request.AddBody(member);
 
             return Execute<bool>(request);
@@ -241,8 +262,11 @@ namespace EmmaSharp
         /// <remarks>Http404 if no member is found.</remarks>
         public bool DeleteMember(string memberId)
         {
-            var request = new RestRequest(Method.DELETE);
-            request.Resource = "/{accountId}/members/{memberId}";
+            var request = new RestRequest()
+            {
+                Method = Method.Delete,
+                Resource = "/{accountId}/members/{memberId}"
+            };
             request.AddUrlSegment("memberId", memberId);
 
             return Execute<bool>(request);
@@ -256,8 +280,10 @@ namespace EmmaSharp
         /// <remarks>Http404 if no member is found.</remarks>
         public List<Group> GetMemberGroups(string memberId)
         {
-            var request = new RestRequest();
-            request.Resource = "/{accountId}/members/{memberId}/groups";
+            var request = new RestRequest
+            {
+                Resource = "/{accountId}/members/{memberId}/groups"
+            };
             request.AddUrlSegment("memberId", memberId);
 
             return Execute<List<Group>>(request);
@@ -272,12 +298,15 @@ namespace EmmaSharp
         /// <remarks>Http404 if no member is found.</remarks>
         public List<int> AddMemberToGroups(string memberId, List<int> groupIds)
         {
-            var request = new RestRequest(Method.PUT);
-            request.Resource = "/{accountId}/members/{memberId}/groups";
+            var request = new RestRequest()
+            {
+                Method = Method.Put,
+                Resource = "/{accountId}/members/{memberId}/groups"
+            };
             request.AddUrlSegment("memberId", memberId);
 
             request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+            //request.JsonSerializer = new EmmaJsonSerializer();
             request.AddBody(new { group_ids = groupIds });
 
             return Execute<List<int>>(request);
@@ -292,12 +321,15 @@ namespace EmmaSharp
         /// <remarks>Http404 if no member is found.</remarks>
         public List<int> RemoveMemberFromGroups(string memberId, List<int> groupIds)
         {
-            var request = new RestRequest(Method.PUT);
-            request.Resource = "/{accountId}/members/{memberId}/groups/remove";
+            var request = new RestRequest()
+            {
+                Method = Method.Put,
+                Resource = "/{accountId}/members/{memberId}/groups/remove"
+            };
             request.AddUrlSegment("memberId", memberId);
 
             request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+            //request.JsonSerializer = new EmmaJsonSerializer();
             request.AddBody(new { group_ids = groupIds });
 
             return Execute<List<int>>(request);
@@ -311,8 +343,11 @@ namespace EmmaSharp
         /// <remarks></remarks>
         public bool DeleteAllMembers(MemberStatusShort memberStatusId)
         {
-            var request = new RestRequest(Method.DELETE);
-            request.Resource = "/{accountId}/members";
+            var request = new RestRequest()
+            {
+                Method = Method.Delete,
+                Resource = "/{accountId}/members"
+            };
             request.AddParameter("member_status_id", memberStatusId.ToEnumString<MemberStatusShort>());
 
             return Execute<bool>(request);
@@ -326,8 +361,11 @@ namespace EmmaSharp
         /// <remarks>Http404 if no member is found.</remarks>
         public bool RemoveMemberFromAllGroups(string memberId)
         {
-            var request = new RestRequest(Method.DELETE);
-            request.Resource = "/{accountId}/members/{memberId}/groups";
+            var request = new RestRequest()
+            {
+                Method = Method.Delete,
+                Resource = "/{accountId}/members/{memberId}/groups"
+            };
             request.AddUrlSegment("memberId", memberId);
 
             return Execute<bool>(request);
@@ -341,11 +379,14 @@ namespace EmmaSharp
         /// <remarks>Http404 if any of the members or groups do not exist</remarks>
         public bool RemoveMembersFromGroups(RemoveMemberGroups groups)
         {
-            var request = new RestRequest(Method.PUT);
-            request.Resource = "/{accountId}/members/groups/remove";
+            var request = new RestRequest()
+            {
+                Method = Method.Put,
+                Resource = "/{accountId}/members/groups/remove",
 
-            request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+                RequestFormat = DataFormat.Json,
+                //JsonSerializer = new EmmaJsonSerializer()
+            };
             request.AddBody(groups);
 
             return Execute<bool>(request);
@@ -473,12 +514,15 @@ namespace EmmaSharp
         /// <remarks>Http404 if the group does not exist.</remarks>
         public bool CopyMembersIntoStatusGroup(string groupId, CopyStatus status)
         {
-            var request = new RestRequest(Method.PUT);
-            request.Resource = "/{accountId}/members/{groupId}/copy";
+            var request = new RestRequest()
+            {
+                Method = Method.Put,
+                Resource = "/{accountId}/members/{groupId}/copy"
+            };
             request.AddUrlSegment("groupId", groupId);
 
             request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+            //request.JsonSerializer = new EmmaJsonSerializer();
             request.AddBody(status);
 
             return Execute<bool>(request);
@@ -494,15 +538,18 @@ namespace EmmaSharp
         /// <remarks>Http400 if the specified status is invalid</remarks>
         public bool UpdateStatusOfGroupMembersBasedOnCurrentStatus(MemberStatusShort statusFrom, MemberStatusShort statusTo, string groupId = "")
         {
-            var request = new RestRequest(Method.PUT);
-            request.Resource = "/{accountId}/members/status/{statusFrom}/to/{statusTo}";
+            var request = new RestRequest()
+            {
+                Method = Method.Put,
+                Resource = "/{accountId}/members/status/{statusFrom}/to/{statusTo}"
+            };
             request.AddUrlSegment("statusFrom", statusFrom.ToEnumString<MemberStatusShort>());
             request.AddUrlSegment("statusTo", statusTo.ToEnumString<MemberStatusShort>());
 
             if (!string.IsNullOrWhiteSpace(groupId))
             {
                 request.RequestFormat = DataFormat.Json;
-                request.JsonSerializer = new EmmaJsonSerializer();
+                //request.JsonSerializer = new EmmaJsonSerializer();
                 request.AddBody(new { group_id = groupId });
             }
 

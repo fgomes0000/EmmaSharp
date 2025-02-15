@@ -74,11 +74,14 @@ namespace EmmaSharp
         /// <returns>A reference (Field ID as int) to the new field.</returns>
         public int CreateField(CreateField field)
         {
-            var request = new RestRequest(Method.POST);
-            request.Resource = "/{accountId}/fields";
+            var request = new RestRequest()
+            {
+                Method = Method.Post,
+                Resource = "/{accountId}/fields",
 
-            request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+                RequestFormat = DataFormat.Json,
+                //JsonSerializer = new EmmaJsonSerializer()
+            };
             request.AddBody(field);
 
             return Execute<int>(request);
@@ -91,8 +94,11 @@ namespace EmmaSharp
         /// <returns>True if the field is deleted, False otherwise.</returns>
         public bool DeleteField(string fieldId)
         {
-            var request = new RestRequest(Method.DELETE);
-            request.Resource = "/{accountId}/fields/{fieldId}";
+            var request = new RestRequest
+            {
+                Method=Method.Delete,
+                Resource = "/{accountId}/fields/{fieldId}"
+            };
 
             request.AddUrlSegment("fieldId", fieldId);
 
@@ -106,8 +112,11 @@ namespace EmmaSharp
         /// <returns>True if all of the member field data is deleted</returns>
         public bool ClearField(string fieldId)
         {
-            var request = new RestRequest(Method.POST);
-            request.Resource = "/{accountId}/fields/{fieldId}/clear";
+            var request = new RestRequest
+            {
+                Method = Method.Post,
+                Resource = "/{accountId}/fields/{fieldId}/clear"
+            };
             request.AddUrlSegment("fieldId", fieldId);
 
             return Execute<bool>(request);
@@ -121,12 +130,15 @@ namespace EmmaSharp
         /// <returns>A reference (Field ID as int) to the updated field.</returns>
         public int UpdateField(string fieldId, UpdateField field)
         {
-            var request = new RestRequest(Method.PUT);
-            request.Resource = "/{accountId}/fields/{fieldId}";
+            var request = new RestRequest
+            {
+                Method = Method.Put,
+                Resource = "/{accountId}/fields/{fieldId}"
+            };
             request.AddUrlSegment("fieldId", fieldId);
 
             request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+            //request.JsonSerializer = new EmmaJsonSerializer();
             request.AddBody(field);
 
             return Execute<int>(request);

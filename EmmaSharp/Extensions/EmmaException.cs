@@ -3,18 +3,31 @@ using RestSharp;
 
 namespace EmmaSharp
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class EmmaException : Exception
     {
         private string message;
 
-        public IRestResponse Response;
+        /// <summary>
+        /// 
+        /// </summary>
+        public RestResponse Response;
 
-        public EmmaException(IRestResponse response)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="response"></param>
+        public EmmaException(RestResponse response)
         {
             Response = response;
             message = "Unexpected response status " + ((int)response.StatusCode).ToString() + " with body:\n" + response.Content;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override string Message
         {
             get { return message; }

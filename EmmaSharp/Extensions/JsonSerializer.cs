@@ -26,7 +26,7 @@ namespace RestSharp.Serializers
     /// Default JSON serializer for request bodies
     /// Doesn't currently use the SerializeAs attribute, defers to Newtonsoft's attributes
     /// </summary>
-    public class EmmaJsonSerializer : ISerializer
+    public class EmmaJsonSerializer : IRestSerializer, ISerializer, IDeserializer
     {
         private readonly Newtonsoft.Json.JsonSerializer _serializer;
 
@@ -76,6 +76,31 @@ namespace RestSharp.Serializers
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        public string Serialize(Parameter parameter) => Serialize(parameter.Value);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="response"></param>
+        /// <returns></returns>
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+        public T? Deserialize<T>(RestResponse response)
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+        {
+            using var stringReader = new StringReader(response.Content);
+            using var jsonTextReader = new JsonTextReader(stringReader);
+            var result = _serializer.Deserialize<T>(jsonTextReader);
+
+            return result;
+
+        }
+
+        /// <summary>
         /// Unused for JSON Serialization
         /// </summary>
         public string DateFormat { get; set; }
@@ -90,6 +115,31 @@ namespace RestSharp.Serializers
         /// <summary>
         /// Content type for serialized content
         /// </summary>
-        public string ContentType { get; set; }
+        public ContentType ContentType { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ISerializer Serializer => this;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IDeserializer Deserializer => this;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string[] AcceptedContentTypes => [ContentType.ToString()];
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public SupportsContentType SupportsContentType => (ct) => ct == ContentType;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public DataFormat DataFormat => DataFormat.Json;
     }
 }

@@ -57,11 +57,14 @@ namespace EmmaSharp
         /// <returns>An array of the new group ids and group names.</returns>
         public List<Group> CreateGroups(CreateGroups groups)
         {
-            var request = new RestRequest(Method.POST);
-            request.Resource = "/{accountId}/groups";
+            var request = new RestRequest()
+            {
+                Method = Method.Post,
+                Resource = "/{accountId}/groups",
 
-            request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+                RequestFormat = DataFormat.Json,
+                //JsonSerializer = new EmmaJsonSerializer()
+            };
             request.AddBody(groups);
 
             return Execute<List<Group>>(request);
@@ -91,12 +94,15 @@ namespace EmmaSharp
         /// <remarks>Http404 if the group does not exist.</remarks>
         public bool UpdateGroup(string memberGroupId, UpdateGroup group)
         {
-            var request = new RestRequest(Method.PUT);
-            request.Resource = "/{accountId}/groups/{memberIdGroup}";
+            var request = new RestRequest
+            {
+                Method = Method.Put,
+                Resource = "/{accountId}/groups/{memberIdGroup}"
+            };
             request.AddUrlSegment("memberIdGroup", memberGroupId);
 
             request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+            //request.JsonSerializer = new EmmaJsonSerializer();
             request.AddBody(group);
 
             return Execute<bool>(request);
@@ -110,8 +116,11 @@ namespace EmmaSharp
         /// <remarks>Http404 if the group does not exist.</remarks>
         public bool DeleteGroup(string memberIdGroup)
         {
-            var request = new RestRequest(Method.DELETE);
-            request.Resource = "/{accountId}/groups/{memberIdGroup}";
+            var request = new RestRequest()
+            {
+                Method = Method.Delete,
+                Resource = "/{accountId}/groups/{memberIdGroup}"
+            };
             request.AddUrlSegment("memberIdGroup", memberIdGroup);
 
             return Execute<bool>(request);
@@ -169,12 +178,15 @@ namespace EmmaSharp
         /// <remarks>Http404 if the group does not exist.</remarks>
         public List<int> AddMembersToGroup(string memberGroupId, MemberIdList memberIds)
         {
-            var request = new RestRequest(Method.PUT);
-            request.Resource = "/{accountId}/groups/{memberGroupId}/members";
+            var request = new RestRequest()
+            {
+                Method = Method.Put,
+                Resource = "/{accountId}/groups/{memberGroupId}/members"
+            };
             request.AddUrlSegment("memberGroupId", memberGroupId);
 
             request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+            //request.JsonSerializer = new EmmaJsonSerializer();
             request.AddBody(memberIds);
 
             return Execute<List<int>>(request);
@@ -189,12 +201,15 @@ namespace EmmaSharp
         /// <remarks>Http404 if the group does not exist.</remarks>
         public List<int> RemoveMembersFromGroup(string memberGroupId, MemberIdList memberIds) 
         {
-            var request = new RestRequest(Method.PUT);
-            request.Resource = "/{accountId}/groups/{memberGroupId}/members/remove";
+            var request = new RestRequest
+            {
+                Method = Method.Put,
+                Resource = "/{accountId}/groups/{memberGroupId}/members/remove"
+            };
             request.AddUrlSegment("memberGroupId", memberGroupId);
 
             request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+            //request.JsonSerializer = new EmmaJsonSerializer();
             request.AddBody(memberIds);
 
             return Execute<List<int>>(request);
@@ -209,8 +224,11 @@ namespace EmmaSharp
         /// <remarks>Http404 if the group does not exist.</remarks>
         public int DeleteAllMembersFromGroup(string memberGroupId, MemberStatusShort? status = null)
         {
-            var request = new RestRequest(Method.DELETE);
-            request.Resource = "/{accountId}/groups/{memberGroupId}/members";
+            var request = new RestRequest
+            {
+                Method = Method.Delete,
+                Resource = "/{accountId}/groups/{memberGroupId}/members"
+            };
             request.AddUrlSegment("memberGroupId", memberGroupId);
 
             if (status != null)
@@ -228,8 +246,11 @@ namespace EmmaSharp
         /// <remarks>Http404 if the group does not exist.</remarks>
         public bool DeleteAllFromMemberGroupsByStatus(string memberGroupId, MemberStatusShort status)
         {
-            var request = new RestRequest(Method.DELETE);
-            request.Resource = "/{accountId}/groups/{memberGroupId}/members/remove";
+            var request = new RestRequest
+            {
+                Method = Method.Delete,
+                Resource = "/{accountId}/groups/{memberGroupId}/members/remove"
+            };
             request.AddUrlSegment("memberGroupId", memberGroupId);
 
             request.AddParameter("member_status_id", status.ToEnumString<MemberStatusShort>());
@@ -247,13 +268,16 @@ namespace EmmaSharp
         /// <remarks>Http404 if the group does not exist.</remarks>
         public bool CopyUsersFromGroup(string fromGroupId, string toGroupId, MemberStatusShortList status)
         {
-            var request = new RestRequest(Method.PUT);
-            request.Resource = "/{accountId}/groups/{fromGroupId}/{toGroupId}/members/copy";
+            var request = new RestRequest
+            {
+                Method = Method.Put,
+                Resource = "/{accountId}/groups/{fromGroupId}/{toGroupId}/members/copy"
+            };
             request.AddUrlSegment("fromGroupId", fromGroupId);
             request.AddUrlSegment("toGroupId", toGroupId);
 
             request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = new EmmaJsonSerializer();
+            //request.JsonSerializer = new EmmaJsonSerializer();
             request.AddBody(status);
 
             return Execute<bool>(request);

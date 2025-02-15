@@ -6,6 +6,7 @@ using RestSharp.Serializers;
 using System;
 using System.Diagnostics;
 using System.Net;
+using System.Text.Json;
 
 namespace EmmaSharp
 {
@@ -47,10 +48,12 @@ namespace EmmaSharp
             // Explicitly set requests to TLS 1.1 or higher per Emma Documentation
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
 
-            var client = new RestClient();
-            client.BaseUrl = new Uri(BaseUrl);
+            var clientOptions = new RestClientOptions(BaseUrl)
+            {
+                //client.BaseUrl = new Uri(BaseUrl);
+                Authenticator = new HttpBasicAuthenticator(_publicKey, _secretKey)
+            };
 
-            client.Authenticator = new HttpBasicAuthenticator(_publicKey, _secretKey);
             request.AddParameter("accountId", _accountId, ParameterType.UrlSegment); // used on every request
 
             if (start >= 0 && end >= 0) {
@@ -60,19 +63,29 @@ namespace EmmaSharp
 
             request.RequestFormat = DataFormat.Json;
 
-            Newtonsoft.Json.JsonSerializer serializer = new Newtonsoft.Json.JsonSerializer();
-            serializer.Converters.Add(new StringEnumConverter());
-            request.JsonSerializer = new EmmaJsonSerializer(serializer);
+            //request.JsonSerializer = new EmmaJsonSerializer(serializer);
 
-            IRestResponse<T> execute = client.Execute<T>(request);
-            Trace.WriteLine(request.JsonSerializer.Serialize(request));
-            checkResponse(execute);
+            Func<IRestSerializer> serializer = () => {
+                Newtonsoft.Json.JsonSerializer jsonSerializer = new Newtonsoft.Json.JsonSerializer();
+                jsonSerializer.Converters.Add(new StringEnumConverter());
+                return new EmmaJsonSerializer(jsonSerializer);
+            };
+            //var sco = new SerializerConfig().UseOnlySerializer(serializer);
+
+            using var client = new RestClient(clientOptions,null,
+                configureSerialization: (cfg) => cfg.UseOnlySerializer(serializer));
+
+                                                            
+            RestResponse<T> response = client.Execute<T>(request);
             
-            T response = JsonConvert.DeserializeObject<T>(execute.Content);
-            return response;
+            Trace.WriteLine(response.Data);
+            checkResponse(response);
+            
+            //T response = JsonConvert.DeserializeObject<T>(execute.Content);
+            return response.Data;
         }
 
-        private void checkResponse(IRestResponse response)
+        private void checkResponse(RestResponse response)
         {
             int code = (int)response.StatusCode;
             if (code >= 400)
